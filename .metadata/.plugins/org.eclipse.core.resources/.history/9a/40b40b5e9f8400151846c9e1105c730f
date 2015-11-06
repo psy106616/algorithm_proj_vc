@@ -1,0 +1,24 @@
+import java.util.*;
+import java.io.*;
+
+public class getVertexCover {
+	static String USAGE = "Usage:";
+
+	public static void main(String[] args) throws IOException {
+		
+		//check input correct
+		if(args.length != 5){
+			System.out.println("Input Error");
+			System.out.println(USAGE);
+			System.exit(1);
+		}
+		String inFileName = args[0];
+		String outFileName = args[1];
+		String algPick = args[2];
+		
+		if(!algPick.equalsIgnoreCase("bb") && !algPick.equalsIgnoreCase("local") && !algPick.equalsIgnoreCase("approx")){
+			System.out.println()
+		}
+	}
+
+}

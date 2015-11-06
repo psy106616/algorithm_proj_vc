@@ -1,0 +1,18 @@
+import java.util.*;
+
+public class Graph {
+	int numNodes = 0;
+	HashMap<Integer, ArrayList<Integer>> Nodes = new HashMap<Integer, ArrayList<Integer>>();
+	
+	public Graph(){
+		
+	}
+	
+	public Graph(int numNodes){
+		numNodes = 0;
+	}
+	
+	public addEdge(int from, int to){
+		
+	}
+}
