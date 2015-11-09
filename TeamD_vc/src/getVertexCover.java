@@ -7,15 +7,20 @@ public class getVertexCover {
 	public static void main(String[] args) throws IOException {
 		
 		//check input correct
-		if(args.length != 5){
-			System.out.println("Input Error");
-			System.out.println(USAGE);
-			System.exit(1);
-		}
-		String inFileName = args[0];
-		String outFileName = args[1];
-		String algPick = args[2];
-		String allowedTime = args[3];
+//		if(args.length != 5){
+//			System.out.println("Input Error");
+//			System.out.println(USAGE);
+//			System.exit(1);
+//		}
+//		String inFileName = args[0];
+//		String outFileName = args[1];
+//		String algPick = args[2];
+//		String allowedTime = args[3];
+		
+		//test use
+		String inFileName = "as-22july06.graph";
+		String outFileName = "testout.txt";
+		String algPick = "bb";
 		
 		if(!algPick.equalsIgnoreCase("bb") && !algPick.equalsIgnoreCase("local") && !algPick.equalsIgnoreCase("approx")){
 			System.out.println("Algorithm not recognized");
@@ -28,7 +33,7 @@ public class getVertexCover {
 		//input file parse
 		Graph G = parseInput(inFileName);
 		
-		ArrayList<Integer> VCset = new ArrayList<Integer>();
+		Set<Integer> VCset = new HashSet<Integer>();
 		
 		if(algPick.equalsIgnoreCase("bb")){
 			//using branch and bound
@@ -50,18 +55,19 @@ public class getVertexCover {
 		BufferedReader fcont = new BufferedReader(new FileReader(inFileName));
 		
 		String[] firstLine = fcont.readLine().split(" ");
-		Graph G = new Graph(Integer.parseInt(firstLine[0]), Integer.parseInt(firstLine[1]));
+		int nodeCnt = Integer.parseInt(firstLine[0]);
+		Graph G = new Graph(nodeCnt, Integer.parseInt(firstLine[1]));
 		
-		int edgeCnt = Integer.parseInt(firstLine[1]);
+		int edgeCnt = 0;
 		int lineCnt = 0;
-		String[] curLine;
-		while((curLine = fcont.readLine().split(" "))!=null){
+		String line;
+		while((line = fcont.readLine())!=null){
 			lineCnt++;
+			String[] curLine = line.split(" ");
 			
 			//add edges
 			for(int i=0; i<curLine.length; i++){
-				G.addEdge(lineCnt, Integer.parseInt(curLine[i]));
-				edgeCnt++;
+				edgeCnt += G.addEdge(lineCnt, Integer.parseInt(curLine[i]));
 			}
 		}
 		
