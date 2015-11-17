@@ -3,7 +3,9 @@ import java.util.*;
 public class Graph {
 	int numNodes = 0;
 	int numEdges = 0;
-	HashMap<Integer, Set<Integer>> Nodes = new HashMap<Integer, Set<Integer>>();
+	Set<Integer> nodes = new HashSet<Integer>();
+	int[] nodeDegree;
+	HashMap<Integer, Set<Integer>> nodeAdj = new HashMap<Integer, Set<Integer>>();
 	PriorityQueue<int[]> mostConnectedNodes = new PriorityQueue<int[]>(){
 		public int compare(int[] N1, int[] N2){
 			return N2[1]-N1[1];
@@ -17,9 +19,11 @@ public class Graph {
 	public Graph(int n, int e){
 		this.numNodes = n;
 		this.numEdges = e;
+		this.nodeDegree = new int[n];
 		
 		for(int i=1; i<=n; i++){
-			Nodes.put(i, new HashSet<Integer>());
+			this.nodeAdj.put(i, new HashSet<Integer>());
+			this.nodes.add(i);
 		}
 	}
 	
@@ -34,11 +38,13 @@ public class Graph {
 			to = temp;
 		}
 		
-		if(this.Nodes.get(from).contains(to)){
+		if(this.nodeAdj.get(from).contains(to)){
 			return 0;
 		}
 		else{
-			this.Nodes.get(from).add(to);
+			this.nodeAdj.get(from).add(to);
+			this.nodeDegree[from-1]+=1;
+			this.nodeDegree[to-1]+=1;
 			return 1;
 		}
 	}
@@ -47,13 +53,13 @@ public class Graph {
 		int numEdgesVisited = 0;
 		
 		for(int i=1; i<=this.numNodes; i++){
-			if(this.Nodes.get(i).size()==0)
+			if(this.nodeAdj.get(i).size()==0)
 				continue;
 			else if(nodeSet.contains(i)){
-				numEdgesVisited += this.Nodes.get(i).size();
+				numEdgesVisited += this.nodeAdj.get(i).size();
 			}
 			else{
-				for(Integer n: this.Nodes.get(i)){
+				for(Integer n: this.nodeAdj.get(i)){
 					if(nodeSet.contains(n))
 						numEdgesVisited++;
 				}
@@ -70,10 +76,10 @@ public class Graph {
 	public void updateMostConnectedNodes(){
 		if(this.numNodes==0)
 			return;
-		for(Integer key: this.Nodes.keySet()){
+		for(int i=1; i<=this.nodeDegree.length; i++){
 			int[] temp = new int[2];
-			temp[0] = key;
-			temp[1] = Nodes.get(key).size();
+			temp[0] = i;
+			temp[1] = this.nodeDegree[i-1];
 			this.mostConnectedNodes.add(temp);
 		}
 	}
