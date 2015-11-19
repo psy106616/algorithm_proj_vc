@@ -144,7 +144,15 @@ public class fastVC {
 
 		last_uncov_edge = (Integer)uncov_stack.remove(uncov_stack.size() - 1);
 		index = index_in_uncov_stack[e];
-		uncov_stack.set(index, last_uncov_edge);
+		System.out.println(index);
+		System.out.println(last_uncov_edge);
+		if (index >= uncov_stack.size())
+		{
+			uncov_stack.add(last_uncov_edge);
+		}
+		else {
+			uncov_stack.set(index, last_uncov_edge);
+		}
 		index_in_uncov_stack[last_uncov_edge] = index;
 	}
 
@@ -236,6 +244,14 @@ public class fastVC {
 			}
 		}
 
+		System.out.println("After first initialization: The vertex cover is ");
+
+		for (int v = 1; v <= v_num; v++) {
+			System.out.print(v + ": " + v_in_c[v] + " ");
+		}
+
+		System.out.println();
+
 		uncov_stack_fill_pointer = 0;
 
 		for (int e = 0; e < e_num; e++) {
@@ -253,6 +269,14 @@ public class fastVC {
 			}
 		}
 
+		System.out.println("After second initialization: The vertex cover is ");
+
+		for (int v = 1; v <= v_num; v++) {
+			System.out.print(v + ": " + v_in_c[v] + " ");
+		}
+
+		System.out.println();
+
 		update_best_sol();
 
 		reset_remove_cand();
@@ -266,6 +290,15 @@ public class fastVC {
 			best_v_in_c[i] = v_in_c[i];
 
 		}
+
+		System.out.println("After update: The vertex cover is ");
+
+		for (int v = 1; v <= v_num; v++) {
+			System.out.print(v + ": " + v_in_c[v] + " ");
+		}
+
+		System.out.println();
+
 			
 		best_c_size = c_size;
 		long finishTime = System.nanoTime();
@@ -340,15 +373,15 @@ public class fastVC {
 
 		while(true) {
 			// System.out.println(step);
-			if (uncov_stack_fill_pointer == 0) {
-				update_best_sol();
+			// if (uncov_stack_fill_pointer == 0) {
+			// 	update_best_sol();
 
-				// if (c_size==optimal_size) return;
+			// 	// if (c_size==optimal_size) return;
 
-				update_target_size();
+			// 	update_target_size();
 
-				continue;
-			}
+			// 	continue;
+			// }
 
 			// System.out.println(step);
 			if (step % try_step == 0) {
@@ -364,13 +397,19 @@ public class fastVC {
 
 			remove(remove_v);
 
-			e = (Integer)uncov_stack.get(rand.nextInt(uncov_stack_fill_pointer));
+			System.out.println(uncov_stack);
+			// e = (Integer)uncov_stack.get(rand.nextInt(uncov_stack_fill_pointer));
+			e = (Integer)uncov_stack.get(0);
+
+			System.out.println(e);
 			v1 = edge[e].v1;
 			v2 = edge[e].v2;
 
 			if (dscore[v1] > dscore[v2] || (dscore[v1]==dscore[v2] && time_stamp[v1] < time_stamp[v2]))
 				add_v = v1;
 			else add_v = v2;
+
+			System.out.println(add_v);
 
 			add(add_v);
 
