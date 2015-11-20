@@ -1,0 +1,230 @@
+% --------------------------------------------------------------
+% This is all preamble stuff that you don't have to worry about.
+% Head down to where it says "Start here"
+% --------------------------------------------------------------
+ 
+\documentclass[12pt]{article}
+ 
+\usepackage[margin=1in]{geometry} 
+\usepackage{amsmath,amsthm,amssymb}
+%\usepackage[]{algorithm2e}
+\usepackage{algorithmicx,algorithm}
+\usepackage{algpseudocode}% http://ctan.org/pkg/algorithmicx
+
+\usepackage{multirow}
+
+%\makeatletter
+%\renewcommand{\@algocf@capt@plain}{above}% formerly {bottom}
+%\makeatother
+ 
+\newcommand{\N}{\mathbb{N}}
+\newcommand{\Z}{\mathbb{Z}}
+ 
+\newenvironment{theorem}[2][Theorem]{\begin{trivlist}
+\item[\hskip \labelsep {\bfseries #1}\hskip \labelsep {\bfseries #2.}]}{\end{trivlist}}
+\newenvironment{lemma}[2][Lemma]{\begin{trivlist}
+\item[\hskip \labelsep {\bfseries #1}\hskip \labelsep {\bfseries #2.}]}{\end{trivlist}}
+\newenvironment{exercise}[2][Exercise]{\begin{trivlist}
+\item[\hskip \labelsep {\bfseries #1}\hskip \labelsep {\bfseries #2.}]}{\end{trivlist}}
+\newenvironment{reflection}[2][Reflection]{\begin{trivlist}
+\item[\hskip \labelsep {\bfseries #1}\hskip \labelsep {\bfseries #2.}]}{\end{trivlist}}
+\newenvironment{proposition}[2][Proposition]{\begin{trivlist}
+\item[\hskip \labelsep {\bfseries #1}\hskip \labelsep {\bfseries #2.}]}{\end{trivlist}}
+\newenvironment{corollary}[2][Corollary]{\begin{trivlist}
+\item[\hskip \labelsep {\bfseries #1}\hskip \labelsep {\bfseries #2.}]}{\end{trivlist}}
+ 
+\begin{document}
+ 
+% --------------------------------------------------------------
+%                         Start here
+% --------------------------------------------------------------
+ 
+%\renewcommand{\qedsymbol}{\filledbox}
+ 
+\title{Project Checkpoint}%replace X with the appropriate number
+\author{Shengyun Peng \hspace{0.5 cm} 
+Yuan Ma \hspace{0.5 cm}
+Qiang Wang} %if necessary, replace with your course title
+\date{\vspace{-6ex}} 
+\maketitle
+In this checkpoint, we've implemented two algorithms to solve Minimum Vertex Cover problem: Maximum Degree Greedy\cite{delbot2010analytical} for approximation and FastVC\cite{cai2015balance} for local search. And the pseudocode and respective results table are below:
+
+%The basic idea of Maximum Degree Greedy algorithm is that first we create a priority queue in the order of the degree of the node, then we delete the node with the most degree in each step until the priority queue is empty.
+
+%The basic idea for FastVC is to first construct a vertex cover as the initial candidate solution and then use Best from Multiple Selection (BMS) to choose the removing vertex in each exchanging step.
+
+%\hfill \break
+
+%\begin{algorithm}[H]
+% \KwData{graph $G = (V,E)$}
+% \KwResult{a vertex cover of $G$ }
+% $C \leftarrow \emptyset$\;
+% \While{$E \neq \emptyset$}{
+%  select a vertex $u$ of maximum degree\;
+%%  \eIf{understand}{
+%%   go to next section\;
+%%   current section becomes this one\;
+%%   }{
+%%   go back to the beginning of current section\;
+%%  }
+%  $V \leftarrow V - \{u\} $\;
+%  $C = C \cup \{u\}$\;
+%  
+% }
+% \Return C\;
+% \caption{Maximum Degree Greedy}
+%\end{algorithm} 
+\vspace{-2ex}
+\begin{algorithm}
+  \caption{Maximum Degree Greedy}
+  \begin{algorithmic}[1] 
+  \State \textbf{Data}: graph $G = (V,E)$
+  \State \textbf{Result}: a vertex cover of $G$
+  \State $C \leftarrow \emptyset$
+%    \Procedure{Euclid}{$a,b$}
+%    \Comment{The g.c.d. of a and b}
+%      \State $r\gets a\bmod b$
+      \While{$E \neq \emptyset$}
+%      \Comment{We have the answer if r is 0}
+        \State select a vertex $u$ of maximum degree
+        \State $V \leftarrow V - \{u\} $
+        \State $C = C \cup \{u\}$
+      \EndWhile
+%      \For{\texttt{<some condition>}}
+%        \State \texttt{<do stuff>}
+%      \EndFor
+      \State \textbf{Return} $C$
+%      \Comment{The gcd is b}
+%    \EndProcedure
+  \end{algorithmic}
+\end{algorithm}
+%\hfill \break
+
+%\begin{algorithm}[H]
+%
+% \KwData{graph $G = (V,E)$, the cutoff time}
+% \KwResult{a vertex cover of $G$ }
+% $C := ConstructVC()$\;
+% $gain(v) := 0$ for each vertex $v \notin C $\;
+% \While{elapsed time $<$ cutoff}{
+%  \If{C covers all edges}{
+%   $C^{*} := C$\;
+%   remove a vertex with minimum $loss$ from $C$\;
+%   continue;
+%   }
+%   $u := ChooseRmVertex(C)$\;
+%   $C := C \setminus \{u\} $\;
+%   $e := $ a random uncovered edge\;
+%   $v := $ the endpoint of $e$ with greater $gain$, breaking ties in favor of the older one\;
+%   $C := C\cup \{v\}$\;
+% }
+% \Return $C^*$\;
+% 
+% \caption{FastVC}
+%\end{algorithm}
+\vspace{-4ex}
+\begin{algorithm}
+  \caption{FastVC}
+  \begin{algorithmic}[1] 
+  \State \textbf{Data}: graph $G = (V,E)$, the cutoff time
+  \State \textbf{Result}: a vertex cover of $G$
+  \State $C := ConstructVC()$
+  \State $gain(v) := 0$ for each vertex $v \notin C $
+%    \Procedure{Euclid}{$a,b$}
+%    \Comment{The g.c.d. of a and b}
+%      \State $r\gets a\bmod b$
+      \While{elapsed time $<$ cutoff}
+%      \Comment{We have the answer if r is 0}
+        \If{C covers all edges}
+        \State $C^{*} := C$
+        \State remove a vertex with minimum $loss$ from $C$
+        \State continue
+        \EndIf
+        \State $u := ChooseRmVertex(C)$
+        \State $C := C \setminus \{u\} $
+        \State $e := $ a random uncovered edge
+        \State $v := $ the endpoint of $e$ with greater $gain$, breaking ties in favor of the older one
+        \State $C := C\cup \{v\}$
+      \EndWhile
+%      \For{\texttt{<some condition>}}
+%        \State \texttt{<do stuff>}
+%      \EndFor
+      \State \textbf{Return} $C^*$
+%      \Comment{The gcd is b}
+%    \EndProcedure
+  \end{algorithmic}
+\end{algorithm}
+
+\begin{center}
+\begin{table}[]
+\centering
+\caption{Result}
+\label{my-label}
+\begin{tabular}{|l|l|l|l|l|l|l|}
+\hline
+ & \multicolumn{3}{|c|}{\begin{tabular}[c]{@{}c@{}}Approximation:\\ Maximum Degree Greedy \cite{delbot2010analytical}\end{tabular}} & \multicolumn{3}{|c|}{Fast Local search\cite{cai2015balance}} \\ \hline
+Dataset &   Time(s)   &   VC Value   &   RelErr    &   Time(s)    &   VC Value    &   RelErr    \\ \hline
+ jazz.graph &    0.03   &   175    &   0.11    &  0.008448804     &    160   &    0.013   \\ \hline
+ karate.graph &   0.002    &   25    &   0.79    &  0.001936625     &    14   &   0.000    \\ \hline
+ football.graph &   0.0016    &   103    &   0.100    &   0.005724291    &   97    &  0.032     \\ \hline
+ as-22july06.graph&   5.50    &   3500    &   0.06    &   0.412248884    &    3325   &    0.007   \\ \hline
+ hep-th.graph&   2.44    &   4214    &  0.07    & 0.143352889      &   3942    &    0.004   \\ \hline
+ star.graph&   8.24    &   8535    &    0.24   &  0.187682665     &   7040    &   0.0200    \\ \hline
+ star2.graph&   6.10    &    5174   &   0.14    & 0.257217559      &   4862    &   0.070    \\ \hline
+ netscience.graph&    0.17   &   920    &   0.02    &    0.104795025   &   899    &    0.000   \\ \hline
+ email.graph&   0.15    &   691    &   0.16    &  0.056203149     &    613   &  0.032     \\ \hline
+ delaunay\_n10.graph&   0.15    &   889    &  0.26     &    0.082553542   &    747   &    0.063   \\ \hline
+ power.graph&   0.89    &   2910    &    0.32   & 0.095896463      &    2271   &   0.031    \\ \hline
+\end{tabular}
+\end{table}
+\end{center} 
+%\begin{theorem}{x.yz} %You can use theorem, proposition, exercise, or reflection here.  Modify x.yz to be whatever number you are proving
+%Delete this text and write theorem statement here.
+%\end{theorem}
+% 
+%\begin{proof}
+%Blah, blah, blah.  Here is an example of the \texttt{align} environment:
+%%Note 1: The * tells LaTeX not to number the lines.  If you remove the *, be sure to remove it below, too.
+%%Note 2: Inside the align environment, you do not want to use $-signs.  The reason for this is that this is already a math environment. This is why we have to include \text{} around any text inside the align environment.
+%\begin{align*}
+%\sum_{i=1}^{k+1}i & = \left(\sum_{i=1}^{k}i\right) +(k+1)\\ 
+%& = \frac{k(k+1)}{2}+k+1 & (\text{by inductive hypothesis})\\
+%& = \frac{k(k+1)+2(k+1)}{2}\\
+%& = \frac{(k+1)(k+2)}{2}\\
+%& = \frac{(k+1)((k+1)+1)}{2}.
+%\end{align*}
+%\end{proof}
+% 
+%\begin{proposition}{x.yz}
+%Let $n\in \Z$.  
+%\end{proposition}
+% 
+%\begin{proof}[Disproof]%Whatever you put in the square brackets will be the label for the block of text to follow in the proof environment.
+%Blah, blah, blah.  I'm so smart.
+%\end{proof}
+ 
+% --------------------------------------------------------------
+%     You don't have to mess with anything below this line.
+% --------------------------------------------------------------
+\vspace{-10ex}
+
+For the \textbf{remaining} algorithms, we are going to implement Branch and Bound, and Stochastic Local Search(possibly) for Local Search. 
+
+Branch and Bound: Given a set of selected vertices which don't form a Vertex Covers set, the edges can be partitioned into two parts: edges covered by current set and ones not covered. The subproblem is to find the minimum vertex cover of those uncovered edges. To solve this, speed up the algorithm and avoid duplicated searching, for each of the nodes in our search tree, there will be two branches to search.  One includes one more vertex remaining unused and according to best first search strategy, the vertex will be chosen as the node with the most degree considering only uncovered edges. Another, on the contrary, will not include the previous vertex, but all of its neighbor vertices, which are not covered yet. The lower bound of each branch is measured as the number of vertices used. If current branch has exceeded the global lower bound so far, the search on this branch will be terminated since it is not possible for the solution of this branch will give us a better solution than previous known one. 
+
+Stochastic Local Search\cite{richter2007stochastic} : This algorithm is for $k$-vertex cover. It takes $G = (V.E)$ and a parameter $k$, and searches for a vertex cover of size $k$ of $G$. First, build a candidate solution by iteratively adding vertices that a maximum number of incident edges which are not covered by $C$ until the cardinality of $C$ is k. Second, exchange two vertices to build a neighbouring candidate solution: a vertex $u$ in $C$ is taken out of $C$ according to heuristics, and a vertex $v$ not in $C$ is put into $C$ randomly. And the termination criterion is when either a vertex is found, or a maximum number of steps has been reached.
+\vspace{-4ex}
+\begin{thebibliography}{1}
+
+\bibitem{delbot2010analytical}
+Delbot, François, and Christian Laforest. "Analytical and experimental comparison of six algorithms for the vertex cover problem." Journal of Experimental Algorithmics (JEA) 15 (2010): 1-4.
+
+\bibitem{cai2015balance}
+Cai, Shaowei. "Balance between complexity and quality: local search for minimum vertex cover in massive graphs." Proceedings of the Twenty-Fourth International Joint Conference on Artificial Intelligence, IJCAI. 2015.
+
+\bibitem{richter2007stochastic}
+Richter, Silvia, Malte Helmert, and Charles Gretton. "A stochastic local search approach to vertex cover." KI 2007: Advances in Artificial Intelligence. Springer Berlin Heidelberg, 2007. 412-426.
+
+\end{thebibliography}
+ 
+\end{document}
