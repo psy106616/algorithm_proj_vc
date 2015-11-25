@@ -3,8 +3,8 @@ import java.io.*;
 
 public class fastVC {
 
-	public static final int MAXV = 120;
-	public static final int MAXE = 620;
+	public static final int MAXV = 1000000;
+	public static final int MAXE = 6000000;
 
 	public static int c_size;
 	public static int v_num;
@@ -14,8 +14,8 @@ public class fastVC {
 
 	public static int[] v_degree = new int[MAXV];
 
-	public static int[][] v_edges = new int[MAXV][MAXE];
-	public static int[][] v_adj = new int[MAXV][MAXE];
+	public static int[][] v_edges;
+	public static int[][] v_adj;
 
 	public static int try_step = 10;
 
@@ -70,13 +70,18 @@ public class fastVC {
 			int lineCnt = 0;
 			while ((text = reader.readLine()) != null) {
 				lineCnt++;
-				String[] numbers = text.split(" ");
+				if (text.length() > 0)
+				{
+					String[] numbers = text.split(" ");
 
-				for (int i = 0; i < numbers.length; i++) {
-					int tmp = Integer.parseInt(numbers[i]);
-					G.addEdge(lineCnt, tmp);
+					for (int i = 0; i < numbers.length; i++) {
+						int tmp = Integer.parseInt(numbers[i]);
+						G.addEdge(lineCnt, tmp);
+					}
+					v_degree[lineCnt] = numbers.length;
 				}
-				v_degree[lineCnt] = numbers.length;
+				else
+					v_degree[lineCnt] = 0;	
 			}
 		}
 		catch (FileNotFoundException e)
@@ -116,6 +121,14 @@ public class fastVC {
 		// }
 
 		int v1, v2;
+
+		v_edges = new int[v_num+1][];
+		v_adj = new int[v_num+1][];
+
+		for (int v = 1; v <= v_num; v++) {
+			v_edges[v] = new int[v_degree[v]];
+			v_adj[v] = new int[v_degree[v]];
+		}
 
 		for (int e = 0; e < e_num; e++) {
 			v1 = edge[e].v1;
@@ -302,7 +315,7 @@ public class fastVC {
 			
 		best_c_size = c_size;
 		long finishTime = System.nanoTime();
-		best_comp_time = (double) (finishTime - startTime);
+		best_comp_time = (double) (finishTime - startTime)/1000000000;
 		// best_comp_time = round(best_comp_time * 100)/100.0;
 		best_step = step;
 	}
@@ -388,7 +401,7 @@ public class fastVC {
 				// times(&finish);
 				long finishTime = System.nanoTime();
 				// double elap_time = (finish.tms_utime + finish.tms_stime - start_time)
-				double elap_time = (double)(finishTime - startTime);
+				double elap_time = (double)(finishTime - startTime)/1000000000;
 				System.out.println(elap_time);
 				if (elap_time >= cutoff_time) return;
 			}
