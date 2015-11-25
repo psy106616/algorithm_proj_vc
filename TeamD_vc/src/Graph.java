@@ -110,4 +110,10 @@ public class Graph {
 		}
 		return MCV;
 	}
+	
+	public int getCurrentDeg(int node, Set<Integer> excludeNodes){
+		HashSet<Integer> nodeEdges = new HashSet<Integer>(this.edgeMap.get(node));
+		nodeEdges.removeAll(excludeNodes);
+		return nodeEdges.size();
+	}
 }

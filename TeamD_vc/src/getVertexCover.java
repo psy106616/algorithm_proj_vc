@@ -18,7 +18,7 @@ public class getVertexCover {
 //		String allowedTime = args[3];
 		
 		//test use
-		String inFileName = "jazz.graph";
+		String inFileName = "football.graph";
 		String outFileName = "testout.txt";
 		String algPick = "bb";
 				
