@@ -18,10 +18,10 @@ public class getVertexCover {
 //		String allowedTime = args[3];
 		
 		//test use
-		String inFileName = "as-22july06.graph";
+		String inFileName = "jazz.graph";
 		String outFileName = "testout.txt";
 		String algPick = "bb";
-		
+				
 		if(!algPick.equalsIgnoreCase("bb") && !algPick.equalsIgnoreCase("local") && !algPick.equalsIgnoreCase("approx")){
 			System.out.println("Algorithm not recognized");
 			System.out.println(USAGE);
@@ -33,22 +33,34 @@ public class getVertexCover {
 		//input file parse
 		Graph G = parseInput(inFileName);
 		
-		Set<Integer> VCset = new HashSet<Integer>();
+		Set<Integer> VCset;
 		
+		long startTime = System.currentTimeMillis();
+
 		if(algPick.equalsIgnoreCase("bb")){
 			//using branch and bound
-			BranchBound bb = new BranchBound();
-			VCset = bb.getVC_BB(G);
+			BranchBound bb = new BranchBound(G);
+			bb.getVC_BB(G);
+			VCset = bb.bestVertexSet;
 		}
 		else if(algPick.equalsIgnoreCase("approx")){
 			//using approximation
-			
+			VCset = new HashSet<Integer>();
 		}
 		else{
 			//using local search
+			VCset = new HashSet<Integer>();
 		}
 		
+		long endTime = System.currentTimeMillis();
+		
 		output.close();
+		System.out.println("Best set found with "+VCset.size()+" of vertices: ");
+		for(Integer v: VCset){
+			System.out.printf("%d,",v);
+		}
+		System.out.println();
+		System.out.println("Run time in seconds: " + (endTime-startTime)/1e3);
 	}
 	
 	public static Graph parseInput(String inFileName) throws IOException {
@@ -62,8 +74,10 @@ public class getVertexCover {
 		int lineCnt = 0;
 		String line;
 		while((line = fcont.readLine())!=null){
+			if(line.equals(""))
+				break;
 			lineCnt++;
-			String[] curLine = line.split(" ");
+			String[] curLine = line.trim().split(" ");
 			
 			//add edges
 			for(int i=0; i<curLine.length; i++){
@@ -76,6 +90,7 @@ public class getVertexCover {
 			G.numEdges = edgeCnt;
 		}
 		
+		G.updateMostConnectedNodes();
 		fcont.close();
 		return G;
 	}

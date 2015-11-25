@@ -4,13 +4,16 @@ public class Graph {
 	int numNodes = 0;
 	int numEdges = 0;
 	Set<Integer> nodes = new HashSet<Integer>();
+	Set<Edge> edges = new HashSet<Edge>();
+	Set<Edge> visitedEdges = new HashSet<Edge>();
+	Set<Integer> usedVertex = new HashSet<Integer>();
+	
 	int[] nodeDegree;
+	
 	HashMap<Integer, Set<Integer>> nodeAdj = new HashMap<Integer, Set<Integer>>();
-	PriorityQueue<int[]> mostConnectedNodes = new PriorityQueue<int[]>(){
-		public int compare(int[] N1, int[] N2){
-			return N2[1]-N1[1];
-		}
-	};
+	HashMap<Integer, Set<Integer>> edgeMap = new HashMap<Integer, Set<Integer>>();
+	
+	PriorityQueue<int[]> mostConnectedNodes = new PriorityQueue<int[]>(10, new myComp());
 	
 	public Graph(){
 		
@@ -23,6 +26,7 @@ public class Graph {
 		
 		for(int i=1; i<=n; i++){
 			this.nodeAdj.put(i, new HashSet<Integer>());
+			this.edgeMap.put(i, new HashSet<Integer>());
 			this.nodes.add(i);
 		}
 	}
@@ -31,6 +35,11 @@ public class Graph {
 		// add in edges, only store upper triangular of the adjacency matrix
 		if(from > this.numNodes || to > this.numNodes)
 			return 0;
+		
+		this.edgeMap.get(from).add(to);
+		this.edgeMap.get(to).add(from);
+		this.edges.add(new Edge(from, to));
+		this.edges.add(new Edge(to, from));
 		
 		if(from > to){
 			int temp = from;
@@ -82,5 +91,23 @@ public class Graph {
 			temp[1] = this.nodeDegree[i-1];
 			this.mostConnectedNodes.add(temp);
 		}
+	}
+	
+	public mostCV getMCV(Set<Integer> excludeNodes){
+		//int MCV = -1;
+		//int MCVSize = Integer.MIN_VALUE;
+		mostCV MCV = new mostCV();
+		for(Map.Entry<Integer, Set<Integer>> entry: this.edgeMap.entrySet()){
+			if(!excludeNodes.contains(entry.getKey())){
+				HashSet<Integer> currentEdges = new HashSet<Integer>(entry.getValue());
+				currentEdges.removeAll(excludeNodes);
+				if(currentEdges.size()>MCV.nodeDeg){
+					//MCVSize = currentEdges.size();
+					//MCV = entry.getKey();
+					MCV.updateMCV(entry.getKey(), currentEdges);
+				}
+			}
+		}
+		return MCV;
 	}
 }
