@@ -18,7 +18,7 @@ public class getVertexCover {
 //		String allowedTime = args[3];
 		
 		//test use
-		String inFileName = "football.graph";
+		String inFileName = "jazz.graph";
 		String outFileName = "testout.txt";
 		String algPick = "bb";
 				
@@ -81,6 +81,8 @@ public class getVertexCover {
 			
 			//add edges
 			for(int i=0; i<curLine.length; i++){
+				if(lineCnt==Integer.parseInt(curLine[i]))
+					System.out.println("Self edge detected");
 				edgeCnt += G.addEdge(lineCnt, Integer.parseInt(curLine[i]));
 			}
 		}
