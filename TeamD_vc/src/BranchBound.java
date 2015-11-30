@@ -8,7 +8,7 @@ public class BranchBound {
 	//mostConnectedVertex mCV;
 	
 	public BranchBound(Graph G){
-		this.lowerBound = 600;
+		this.lowerBound = new Approx().getVC_approx(G.edgeMap).size();
 		this.bestVertexSet = G.nodes;
 		VCfound = false;
 		//this.mCV = new mostConnectedVertex(G.edgeMap);

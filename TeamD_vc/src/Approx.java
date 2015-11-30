@@ -1,47 +1,53 @@
 import java.util.Set;
 
 
+import java.util.*;
+
 public class Approx {
-	public Set<Integer> getVC_approx(Graph G){
+	
+	public Approx(){
+		
+	}
+	
+	public Set<Integer> getVC_approx(HashMap<Integer, Set<Integer>> subGraph){
 
-		int nodeNum = G.numNodes;
+		Set<Integer> used = new HashSet<Integer>();
 
-		while(!isFinished(G)){
-			int index = findMaxDegreeIndex(G);
+		while(!isFinished(subGraph)){
+			int index = findMaxDegreeIndex(subGraph);
+			used.add(index);
 			System.out.println(index);
-			updateGraph(G, index);
+			updateGraph(index, subGraph);
 		}
+		
+		return used;
 	}
 
-	private boolean isFinished(Graph G){
-		for(int i = 0; i < G.numNodes;i++){
-			Set<Integer> temp = G.edgeMap.get(i+1);
-			if(temp.size() > 0){
+	private boolean isFinished(HashMap<Integer, Set<Integer>> subGraph){
+		for(Map.Entry<Integer, Set<Integer>> curEntry: subGraph.entrySet()){
+			if(curEntry.getValue().size()>0)
 				return false;
-			}
 		}
 		return true;
 	}
 
-	private int findMaxDegreeIndex(Graph G){
-		int maxIndex = 1;
-		for(int i = 1; i <= G.numNodes; i++){
-			if(G.edgeMap.get(i).size()>G.edgeMap.get(maxIndex).size()){
-				maxIndex = i;
+	private int findMaxDegreeIndex(HashMap<Integer, Set<Integer>> subGraph){
+		int maxIndex = -1;
+		int maxVal = Integer.MIN_VALUE;
+		for(Map.Entry<Integer, Set<Integer>> curEntry: subGraph.entrySet()){
+			if(curEntry.getValue().size()>maxVal){
+				maxIndex = curEntry.getKey();
+				maxVal = curEntry.getValue().size();
 			}
 		}
 		return maxIndex;
 	}
 
-	private void updateGraph(Graph G, int index){
-		Set<Integer> temp = G.edgeMap.get(index);
-		temp.clear();
+	private void updateGraph(int index, HashMap<Integer, Set<Integer>> subGraph){
+		subGraph.get(index).clear();
 		
-		for(int i = 1; i <= G.numNodes; i++){
-			temp = G.edgeMap.get(i);
-			if(temp.contains(index)){
-				temp.remove(index);
-			}
+		for(Map.Entry<Integer, Set<Integer>> curEntry: subGraph.entrySet()){
+			curEntry.getValue().remove(index);
 		}
 		
 	}
