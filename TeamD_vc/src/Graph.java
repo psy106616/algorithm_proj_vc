@@ -8,13 +8,15 @@ public class Graph {
 	Set<Edge> edges = new HashSet<Edge>();
 	Set<Edge> visitedEdges = new HashSet<Edge>();
 	Set<Integer> usedVertex = new HashSet<Integer>();
+	Set<Integer> unUsedVertex = new HashSet<Integer>();
 	
 	Set<Integer> solution = new HashSet<Integer>();
 	
 	int[] nodeDegree;
 	
-	HashMap<Integer, Set<Integer>> nodeAdj = new HashMap<Integer, Set<Integer>>();
+	//HashMap<Integer, Set<Integer>> nodeAdj = new HashMap<Integer, Set<Integer>>();
 	HashMap<Integer, Set<Integer>> edgeMap = new HashMap<Integer, Set<Integer>>();
+	HashMap<Integer, ArrayList<Integer>> edgeMap2 = new HashMap<Integer, ArrayList<Integer>>();
 	
 	PriorityQueue<int[]> mostConnectedNodes = new PriorityQueue<int[]>(10, new myComp());
 	
@@ -25,18 +27,21 @@ public class Graph {
 	public Graph(int n, int e){
 		this.numNodes = n;
 		this.numEdges = e;
-		this.nodeDegree = new int[n];
+		this.nodeDegree = new int[n+1];
 		
 		for(int i=1; i<=n; i++){
-			this.nodeAdj.put(i, new HashSet<Integer>());
+			//this.nodeAdj.put(i, new HashSet<Integer>());
 			this.edgeMap.put(i, new HashSet<Integer>());
+			this.edgeMap2.put(i, new ArrayList<Integer>());
 			this.nodes.add(i);
 		}
 		
-		int[] s = {1,4,5,7,8,9,10,11,12,13,14,15,16,19,24,25,26,28,29,31,32,33,34,35,38,39,40,42,43,44,45,49,50,51,53,54,55,56,57,58,59,60,61,62,63,64,65,67,69,70,71,72,73,75,76,77,78,80,81,83,86,87,88,90,91,92,93,95,96,97,98,99,100,101,102,103,104,105,106,107,108,109,110,111,112,114,115,116,118,119,121,122,123,124,125,126,127,128,129,130,131,132,133,134,135,136,137,138,139,140,141,142,143,144,146,147,149,150,152,153,154,155,156,157,158,159,161,162,163,164,166,167,168,169,170,171,172,174,175,176,177,178,179,180,182,183,184,185,187,189,190,191,192,193,194,195,196,197};
+		int[] s = {41, 30, 56, 11, 80, 28, 53, 55, 45, 104, 74, 47, 101, 10, 12, 68, 52, 109, 88, 71, 17, 29, 54, 77, 110, 93, 39, 7, 16, 81, 9, 40, 27, 31, 91, 57, 100, 44, 70, 108, 8, 66, 94, 59, 38, 25, 5, 3, 113, 42, 19, 48, 99, 75, 22, 24, 78, 64, 46, 26, 34, 32, 63, 95, 73, 111, 90, 87, 18, 35, 115, 4, 84, 82, 13, 72, 14, 2, 21, 114, 15, 20, 60, 1, 69, 79, 65, 36, 107, 49, 58, 6, 50, 67};
 		for(Integer i: s){
 			this.solution.add(i);
 		}
+		
+		this.unUsedVertex = this.nodes;
 	}
 	
 	public int addEdge(int from, int to){
@@ -48,62 +53,62 @@ public class Graph {
 		this.edgeMap.get(to).add(from);
 		this.edges.add(new Edge(from, to));
 		this.edges.add(new Edge(to, from));
+		this.edgeMap2.get(from).add(to);
+		//this.edgeMap2.get(to).add(from);
 		
-		if(from > to){
-			int temp = from;
-			from = to;
-			to = temp;
-		}
+//		if(from > to){
+//			int temp = from;
+//			from = to;
+//			to = temp;
+//		}
 		
-		if(this.nodeAdj.get(from).contains(to)){
-			return 0;
-		}
-		else{
-			this.nodeAdj.get(from).add(to);
-			this.nodeDegree[from-1]+=1;
-			this.nodeDegree[to-1]+=1;
+		//if(this.nodeAdj.get(from).contains(to)){
+		//	return 0;
+		//}
+		//else{
+		//	this.nodeAdj.get(from).add(to);
+			this.nodeDegree[from]+=1;
+			//this.nodeDegree[to]+=1;
 			return 1;
-		}
+		//}
 	}
 	
-	public boolean checkVC(Set<Integer> nodeSet){
-		int numEdgesVisited = 0;
-		
-		for(int i=1; i<=this.numNodes; i++){
-			if(this.nodeAdj.get(i).size()==0)
-				continue;
-			else if(nodeSet.contains(i)){
-				numEdgesVisited += this.nodeAdj.get(i).size();
-			}
-			else{
-				for(Integer n: this.nodeAdj.get(i)){
-					if(nodeSet.contains(n))
-						numEdgesVisited++;
-				}
-			}
-		}
-		
-		return numEdgesVisited==this.numEdges;
-	}
+//	public boolean checkVC(Set<Integer> nodeSet){
+//		int numEdgesVisited = 0;
+//		
+//		for(int i=1; i<=this.numNodes; i++){
+//			if(this.nodeAdj.get(i).size()==0)
+//				continue;
+//			else if(nodeSet.contains(i)){
+//				numEdgesVisited += this.nodeAdj.get(i).size();
+//			}
+//			else{
+//				for(Integer n: this.nodeAdj.get(i)){
+//					if(nodeSet.contains(n))
+//						numEdgesVisited++;
+//				}
+//			}
+//		}
+//		
+//		return numEdgesVisited==this.numEdges;
+//	}
 	
-	public boolean checkEdgeVisited(){
-		return true;
-	}
-	
-	public void updateMostConnectedNodes(){
-		if(this.numNodes==0)
-			return;
-		for(int i=1; i<=this.nodeDegree.length; i++){
-			int[] temp = new int[2];
-			temp[0] = i;
-			temp[1] = this.nodeDegree[i-1];
-			this.mostConnectedNodes.add(temp);
-		}
-	}
+//	public boolean checkEdgeVisited(){
+//		return true;
+//	}
+//	
+//	public void updateMostConnectedNodes(){
+//		if(this.numNodes==0)
+//			return;
+//		for(int i=1; i<=this.nodeDegree.length; i++){
+//			int[] temp = new int[2];
+//			temp[0] = i;
+//			temp[1] = this.nodeDegree[i-1];
+//			this.mostConnectedNodes.add(temp);
+//		}
+//	}
 	
 	public mostCV getMCV(Set<Integer> excludeNodes){
-		//int MCV = -1;
-		//int MCVSize = Integer.MIN_VALUE;
 		mostCV MCV = new mostCV();
 		for(Map.Entry<Integer, Set<Integer>> entry: this.edgeMap.entrySet()){
 			if(!excludeNodes.contains(entry.getKey())){
@@ -119,6 +124,22 @@ public class Graph {
 		}
 		//MCV.updateOneDegNum(oneCnt);
 		return MCV;
+	}
+	
+	public void getIsland(){
+		for(int i=1; i<this.nodeDegree.length; i++){
+			if(this.nodeDegree[i]==0){
+				this.unUsedVertex.remove(i);
+			}
+			else if(!this.unUsedVertex.contains(i))
+				continue;
+			else if(this.nodeDegree[i]==1 && this.edgeMap2.get(this.edgeMap2.get(i).get(0)).size() == 1){
+				this.usedVertex.add(i);
+				this.unUsedVertex.remove(i);
+				this.unUsedVertex.remove(this.edgeMap2.get(i).get(0));
+				this.visitedEdgesCnt += 2;
+			}
+		}
 	}
 	
 	public int getCurrentDeg(int node, Set<Integer> excludeNodes){

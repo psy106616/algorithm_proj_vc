@@ -8,7 +8,7 @@ public class BranchBound {
 	//mostConnectedVertex mCV;
 	
 	public BranchBound(Graph G){
-		this.lowerBound = G.numNodes;
+		this.lowerBound = 600;
 		this.bestVertexSet = G.nodes;
 		VCfound = false;
 		//this.mCV = new mostConnectedVertex(G.edgeMap);
@@ -34,8 +34,9 @@ public class BranchBound {
 		
 		//two branch
 		G.usedVertex.add(MCV.nodeIdx);
+		G.unUsedVertex.remove(MCV.nodeIdx);
+		G.visitedEdgesCnt += 2*MCV.nodeNeighborExclude.size();
 		
-		mostCV nextBestCV1 = G.getMCV(G.usedVertex);
 		
 //		Set<Edge> edgeBetween = new HashSet<Edge>();
 //		//for(Integer otherEnd: G.edgeMap.get(currentMCV)){
@@ -43,39 +44,51 @@ public class BranchBound {
 //			edgeBetween.add(new Edge(MCV.nodeIdx, otherEnd));
 //			edgeBetween.add(new Edge(otherEnd, MCV.nodeIdx));
 //		}
-		G.visitedEdgesCnt += 2*MCV.nodeNeighborExclude.size();
-		
 //		G.visitedEdges.addAll(edgeBetween);
 		
 		//check lower bound
-		int currentBestLB1 = nextBestCV1.nodeDeg>0?G.usedVertex.size() + (G.numEdges-G.visitedEdgesCnt/2)/nextBestCV1.nodeDeg:G.usedVertex.size();
+		mostCV nextBestCV1 = G.getMCV(G.usedVertex);
+		int currentBestLB1 = nextBestCV1.nodeDeg>0?G.usedVertex.size() + (G.numEdges-G.visitedEdgesCnt/2+nextBestCV1.nodeDeg-1)/nextBestCV1.nodeDeg:G.usedVertex.size();
 		if(currentBestLB1 >= this.lowerBound){
 			G.usedVertex.remove(MCV.nodeIdx);
+			G.unUsedVertex.add(MCV.nodeIdx);
 		}
 		else{
 			getVC_BB(G);
 			G.usedVertex.remove(MCV.nodeIdx);
-			G.usedVertex.addAll(MCV.nodeNeighborExclude);
+			G.unUsedVertex.add(MCV.nodeIdx);
+			//G.usedVertex.addAll(MCV.nodeNeighborExclude);
+			//G.unUsedVertex.removeAll(MCV.nodeNeighborExclude);
 			
 			//Set<Edge> otherEdgesCovered = new HashSet<Edge>();
 			int otherEdgesCoveredNum = 0;
+//			for(Integer neighbor: MCV.nodeNeighborExclude){
+//				Set<Integer> otherEdgeEnds = new HashSet<Integer>(G.edgeMap.get(neighbor));
+//				otherEdgeEnds.remove(MCV.nodeIdx);
+//				otherEdgeEnds.removeAll(G.usedVertex);
+////				for(Integer neighborEnd: otherEdgeEnds){
+////					otherEdgesCovered.add(new Edge(neighbor, neighborEnd));
+////					otherEdgesCovered.add(new Edge(neighborEnd, neighbor));
+////					
+////				}
+//				otherEdgesCoveredNum += otherEdgeEnds.size();
+//				G.visitedEdgesCnt += 2*otherEdgeEnds.size();
+//			}
+			
 			for(Integer neighbor: MCV.nodeNeighborExclude){
-				Set<Integer> otherEdgeEnds = new HashSet<Integer>(G.edgeMap.get(neighbor));
-				otherEdgeEnds.remove(MCV.nodeIdx);
-				otherEdgeEnds.removeAll(G.usedVertex);
-//				for(Integer neighborEnd: otherEdgeEnds){
-//					otherEdgesCovered.add(new Edge(neighbor, neighborEnd));
-//					otherEdgesCovered.add(new Edge(neighborEnd, neighbor));
-//					
-//				}
-				otherEdgesCoveredNum += otherEdgeEnds.size();
-				G.visitedEdgesCnt += 2*otherEdgeEnds.size();
+				G.usedVertex.add(neighbor);
+				G.unUsedVertex.remove(neighbor);
+				Set<Integer> curNodeNeighbor = new HashSet<Integer>(G.edgeMap.get(neighbor));
+				curNodeNeighbor.remove(MCV.nodeIdx);
+				curNodeNeighbor.removeAll(G.usedVertex);
+				G.visitedEdgesCnt += 2*curNodeNeighbor.size();
+				otherEdgesCoveredNum += curNodeNeighbor.size();
 			}
 			
 			mostCV nextBestCV2 = G.getMCV(G.usedVertex);
-			int currentBestLB2 = nextBestCV2.nodeDeg>0?G.usedVertex.size() + (G.numEdges-G.visitedEdgesCnt/2)/nextBestCV2.nodeDeg:G.usedVertex.size();
+			int currentBestLB2 = nextBestCV2.nodeDeg>0?G.usedVertex.size() + (G.numEdges-G.visitedEdgesCnt/2+nextBestCV2.nodeDeg-1)/nextBestCV2.nodeDeg:G.usedVertex.size();
 			
-			if(currentBestLB2 < this.lowerBound){
+			if(nextBestCV2.nodeIdx != MCV.nodeIdx && currentBestLB2 < this.lowerBound){
 				//G.visitedEdges.addAll(otherEdgesCovered);
 				getVC_BB(G);
 				//G.visitedEdges.removeAll(otherEdgesCovered);
@@ -83,7 +96,7 @@ public class BranchBound {
 			
 			G.visitedEdgesCnt -= 2*otherEdgesCoveredNum;
 			G.usedVertex.removeAll(MCV.nodeNeighborExclude);
-			
+			G.unUsedVertex.addAll(MCV.nodeNeighborExclude);
 		}
 		//G.visitedEdges.removeAll(edgeBetween);
 		G.visitedEdgesCnt -= 2*MCV.nodeNeighborExclude.size();
