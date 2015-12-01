@@ -18,7 +18,7 @@ public class getVertexCover {
 //		String allowedTime = args[3];
 		
 		//test use
-		String inFileName = "football.graph";
+		String inFileName = "email.graph";
 		String outFileName = "testout.txt";
 		String algPick = "bb";
 		
@@ -33,12 +33,6 @@ public class getVertexCover {
 		
 		//input file parse
 		Graph G = parseInput(inFileName);
-		
-		Approx test = new Approx();
-		Set<Integer> test2 = test.getVC_approx(new HashMap<Integer, Set<Integer>>(G.edgeMap));
-		
-		System.out.println();
-		System.out.println(test2.size());
 		
 		Set<Integer> VCset;
 		
@@ -102,7 +96,7 @@ public class getVertexCover {
 		}
 		
 		//G.updateMostConnectedNodes();
-		G.getIsland();
+		//G.getIsland();
 		fcont.close();
 		return G;
 	}

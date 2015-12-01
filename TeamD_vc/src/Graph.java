@@ -16,7 +16,7 @@ public class Graph {
 	
 	//HashMap<Integer, Set<Integer>> nodeAdj = new HashMap<Integer, Set<Integer>>();
 	HashMap<Integer, Set<Integer>> edgeMap = new HashMap<Integer, Set<Integer>>();
-	HashMap<Integer, ArrayList<Integer>> edgeMap2 = new HashMap<Integer, ArrayList<Integer>>();
+	//HashMap<Integer, ArrayList<Integer>> edgeMap2 = new HashMap<Integer, ArrayList<Integer>>();
 	
 	PriorityQueue<int[]> mostConnectedNodes = new PriorityQueue<int[]>(10, new myComp());
 	
@@ -32,7 +32,7 @@ public class Graph {
 		for(int i=1; i<=n; i++){
 			//this.nodeAdj.put(i, new HashSet<Integer>());
 			this.edgeMap.put(i, new HashSet<Integer>());
-			this.edgeMap2.put(i, new ArrayList<Integer>());
+			//this.edgeMap2.put(i, new ArrayList<Integer>());
 			this.nodes.add(i);
 		}
 		
@@ -51,9 +51,9 @@ public class Graph {
 		
 		this.edgeMap.get(from).add(to);
 		this.edgeMap.get(to).add(from);
-		this.edges.add(new Edge(from, to));
-		this.edges.add(new Edge(to, from));
-		this.edgeMap2.get(from).add(to);
+		//this.edges.add(new Edge(from, to));
+		//this.edges.add(new Edge(to, from));
+		//this.edgeMap2.get(from).add(to);
 		//this.edgeMap2.get(to).add(from);
 		
 //		if(from > to){
@@ -126,25 +126,25 @@ public class Graph {
 		return MCV;
 	}
 	
-	public void getIsland(){
-		for(int i=1; i<this.nodeDegree.length; i++){
-			if(this.nodeDegree[i]==0){
-				this.unUsedVertex.remove(i);
-			}
-			else if(!this.unUsedVertex.contains(i))
-				continue;
-			else if(this.nodeDegree[i]==1 && this.edgeMap2.get(this.edgeMap2.get(i).get(0)).size() == 1){
-				this.usedVertex.add(i);
-				this.unUsedVertex.remove(i);
-				this.unUsedVertex.remove(this.edgeMap2.get(i).get(0));
-				this.visitedEdgesCnt += 2;
-			}
-		}
-	}
-	
-	public int getCurrentDeg(int node, Set<Integer> excludeNodes){
-		HashSet<Integer> nodeEdges = new HashSet<Integer>(this.edgeMap.get(node));
-		nodeEdges.removeAll(excludeNodes);
-		return nodeEdges.size();
-	}
+//	public void getIsland(){
+//		for(int i=1; i<this.nodeDegree.length; i++){
+//			if(this.nodeDegree[i]==0){
+//				this.unUsedVertex.remove(i);
+//			}
+//			else if(!this.unUsedVertex.contains(i))
+//				continue;
+//			else if(this.nodeDegree[i]==1 && this.edgeMap2.get(this.edgeMap2.get(i).get(0)).size() == 1){
+//				this.usedVertex.add(i);
+//				this.unUsedVertex.remove(i);
+//				this.unUsedVertex.remove(this.edgeMap2.get(i).get(0));
+//				this.visitedEdgesCnt += 2;
+//			}
+//		}
+//	}
+//	
+//	public int getCurrentDeg(int node, Set<Integer> excludeNodes){
+//		HashSet<Integer> nodeEdges = new HashSet<Integer>(this.edgeMap.get(node));
+//		nodeEdges.removeAll(excludeNodes);
+//		return nodeEdges.size();
+//	}
 }

@@ -1,6 +1,6 @@
 import java.util.*;
 
-public class BranchBound {
+public class BranchBound2 {
 	
 	int lowerBound;
 	Set<Integer> bestVertexSet;
@@ -9,7 +9,7 @@ public class BranchBound {
 	
 	public BranchBound(Graph G){
 		Approx init = new Approx();
-		this.bestVertexSet = init.getVC_approx(G);
+		this.bestVertexSet = init.getVC_approx(G.edgeMap);
 		this.lowerBound = this.bestVertexSet.size();
 		VCfound = true;
 		//this.mCV = new mostConnectedVertex(G.edgeMap);
@@ -50,8 +50,6 @@ public class BranchBound {
 		//check lower bound
 		mostCV nextBestCV1 = G.getMCV(G.usedVertex);
 		int currentBestLB1 = nextBestCV1.nodeDeg>0?G.usedVertex.size() + (G.numEdges-G.visitedEdgesCnt/2+nextBestCV1.nodeDeg-1)/nextBestCV1.nodeDeg:G.usedVertex.size();
-		
-		//int currentBestLB1 = G.usedVertex.size() + (new Approx().getVC_approx(G).size()-G.usedVertex.size()+1)/2;
 		if(currentBestLB1 >= this.lowerBound){
 			G.usedVertex.remove(MCV.nodeIdx);
 			G.unUsedVertex.add(MCV.nodeIdx);
