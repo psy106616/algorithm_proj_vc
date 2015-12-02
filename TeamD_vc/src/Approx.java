@@ -16,6 +16,7 @@ public class Approx {
 		while(!isFinished(G, used)){
 			mostCV curMCV = G.getMCV(used);
 			used.add(curMCV.nodeIdx);
+			G.nodes.get(curMCV.nodeIdx).used = true;
 			//System.out.println(index);
 			//updateGraph(index, subGraph);
 		}

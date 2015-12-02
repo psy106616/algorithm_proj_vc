@@ -18,12 +18,12 @@ public class getVertexCover {
 //		String allowedTime = args[3];
 		
 		//test use
-		String inFileName = "email.graph";
+		String inFileName = "star2.graph";
 		String outFileName = "testout.txt";
-		String algPick = "bb";
+		String algPick = "sa";
 		
 				
-		if(!algPick.equalsIgnoreCase("bb") && !algPick.equalsIgnoreCase("local") && !algPick.equalsIgnoreCase("approx")){
+		if(!algPick.equalsIgnoreCase("bb") && !algPick.equalsIgnoreCase("sa") && !algPick.equalsIgnoreCase("approx")){
 			System.out.println("Algorithm not recognized");
 			System.out.println(USAGE);
 			System.exit(1);
@@ -50,7 +50,8 @@ public class getVertexCover {
 		}
 		else{
 			//using local search
-			VCset = new HashSet<Integer>();
+			simulatedAnnealing sa = new simulatedAnnealing();
+			VCset = sa.getVC_sa(G);
 		}
 		
 		long endTime = System.currentTimeMillis();
