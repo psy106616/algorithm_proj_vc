@@ -2,20 +2,24 @@ import java.util.*;
 import java.lang.Math;
 
 public class simulatedAnnealing {
-	int loopCnt = 20;
+	int loopCnt = 10;
 	int A = 1;
 	int B = 1;
 	
 	public Set<Integer> getVC_sa(Graph G){
 		int iter = 1;
 		
-		double decreaseRatio = Math.pow(10, -2.0/G.numNodes);
+		int deno = Math.min(G.numNodes, 10000);
+		
+		double decreaseRatio = Math.pow(10, -2.0/deno);
 		
 		Random gen = new Random();
 		
 		Set<Integer> res = new HashSet<Integer>(G.unUsedVertex);
 		
 		int innerLoopCnt = G.numNodes;
+		
+		long startTime = System.currentTimeMillis();
 		
 		while(iter < this.loopCnt){
 			initSetUp(G);
@@ -27,7 +31,7 @@ public class simulatedAnnealing {
 			Set<Integer> sureSet = new HashSet<Integer>(G.unUsedVertex);
 			while(Temp > 0.01 && iterCnt < innerLoopCnt){
 				
-				System.out.println("Sup "+ iter +" Iter "+iterCnt + " Temp "+Temp);
+				//System.out.println("Sup "+ iter +" Iter "+iterCnt + " Temp "+Temp);
 				
 				int curIdx = gen.nextInt(G.numNodes)+1;
 				int f_cur;
@@ -110,7 +114,8 @@ public class simulatedAnnealing {
 			iter++;
 		}
 		
-		
+		double t = (System.currentTimeMillis() - startTime)/1000;
+		System.out.println("Time spent: "+t);
 		return res;
 	}
 	

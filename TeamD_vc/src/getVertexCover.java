@@ -46,7 +46,8 @@ public class getVertexCover {
 		}
 		else if(algPick.equalsIgnoreCase("approx")){
 			//using approximation
-			VCset = new HashSet<Integer>();
+			Approx app = new Approx();
+			VCset = app.getVC_approx(G);
 		}
 		else{
 			//using local search
@@ -76,19 +77,24 @@ public class getVertexCover {
 		int lineCnt = 0;
 		String line;
 		while((line = fcont.readLine())!=null){
-			if(line.equals(""))
-				break;
-			lineCnt++;
-			String[] curLine = line.trim().split(" ");
-			
-			//add edges
-			for(int i=0; i<curLine.length; i++){
-				if(lineCnt==Integer.parseInt(curLine[i])){
-					System.out.println("Self edge detected");
-					continue;
+			if(lineCnt < G.numNodes){
+				lineCnt++;
+				line = line.trim();
+				if(!line.equals("")){
+					String[] curLine = line.split(" ");
+				
+				//add edges
+					for(int i=0; i<curLine.length; i++){
+						if(lineCnt==Integer.parseInt(curLine[i])){
+							System.out.println("Self edge detected");
+							continue;
+						}
+						edgeCnt += G.addEdge(lineCnt, Integer.parseInt(curLine[i]));
+					}
 				}
-				edgeCnt += G.addEdge(lineCnt, Integer.parseInt(curLine[i]));
 			}
+			else
+				break;
 		}
 		
 		if(edgeCnt != G.numEdges*2){

@@ -13,7 +13,7 @@ public class BranchBound {
 	public BranchBound(Graph G){
 		Approx init = new Approx();
 		this.bestVertexSet = init.getVC_approx(G);
-		this.lowerBound = this.bestVertexSet.size();
+		this.lowerBound = G.numNodes;//this.bestVertexSet.size();
 		VCfound = true;
 		this.startTime = System.currentTimeMillis();
 	}
