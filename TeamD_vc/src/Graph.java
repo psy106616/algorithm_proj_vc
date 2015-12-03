@@ -4,6 +4,7 @@ public class Graph {
 	int numNodes = 0;
 	int numEdges = 0;
 	int visitedEdgesCnt = 0;
+	int mostConnected;
 	
 	ArrayList<Node> nodes = new ArrayList<Node>();
 	Set<Edge> edges = new HashSet<Edge>();
@@ -112,5 +113,9 @@ public class Graph {
 			}
 		}
 		return res;
+	}
+	
+	public void updateMostConnected(){
+		this.mostConnected = this.getMCVidx();
 	}
 }

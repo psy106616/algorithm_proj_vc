@@ -18,9 +18,9 @@ public class getVertexCover {
 //		String allowedTime = args[3];
 		
 		//test use
-		String inFileName = "star2.graph";
+		String inFileName = "as-22july06.graph";
 		String outFileName = "testout.txt";
-		String algPick = "sa";
+		String algPick = "bb";
 		
 				
 		if(!algPick.equalsIgnoreCase("bb") && !algPick.equalsIgnoreCase("sa") && !algPick.equalsIgnoreCase("approx")){
@@ -41,7 +41,7 @@ public class getVertexCover {
 		if(algPick.equalsIgnoreCase("bb")){
 			//using branch and bound
 			BranchBound bb = new BranchBound(G);
-			bb.getVC_BB(G);
+			bb.getVC_BB(G, G.mostConnected);
 			VCset = bb.bestVertexSet;
 		}
 		else if(algPick.equalsIgnoreCase("approx")){
@@ -98,6 +98,7 @@ public class getVertexCover {
 		
 		//G.updateMostConnectedNodes();
 		//G.getIsland();
+		G.updateMostConnected();
 		fcont.close();
 		return G;
 	}
