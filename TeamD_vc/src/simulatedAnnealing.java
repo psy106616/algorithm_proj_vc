@@ -1,19 +1,40 @@
 import java.util.*;
 import java.lang.Math;
+import java.io.FileNotFoundException;
+import java.io.PrintWriter;
+import java.io.UnsupportedEncodingException;
 
 public class simulatedAnnealing {
 	int loopCnt = 10;
 	int A = 1;
 	int B = 1;
+	int randSeed;
+	int cutoff;
+	String out1;
+	String out2;
+	PrintWriter o1;
+	PrintWriter o2;
+	
+	public simulatedAnnealing(int i, int j, String outfile1, String outfile2) throws FileNotFoundException, UnsupportedEncodingException{
+		this.randSeed = i;
+		this.cutoff = j;
+		this.out1 = outfile1;
+		this.out2 = outfile2;
+		this.o1 = new PrintWriter(this.out1, "UTF-8");
+		this.o2 = new PrintWriter(this.out2, "UTF-8");
+	}
 	
 	public Set<Integer> getVC_sa(Graph G){
-		int iter = 1;
+		int iter = 0;
+		
+		double iterCutOff = 1.0*this.cutoff/this.loopCnt;
 		
 		int deno = Math.min(G.numNodes, 10000);
 		
-		double decreaseRatio = Math.pow(10, -2.0/deno);
+		//double decreaseRatio = Math.pow(10, -2.0/deno);
+		double decreaseRatio = 0.9999;
 		
-		Random gen = new Random();
+		Random gen = new Random(this.randSeed);
 		
 		Set<Integer> res = new HashSet<Integer>(G.unUsedVertex);
 		
@@ -21,7 +42,15 @@ public class simulatedAnnealing {
 		
 		long startTime = System.currentTimeMillis();
 		
-		while(iter < this.loopCnt){
+		int cnt = 0;
+		while(iter < this.loopCnt && (System.currentTimeMillis()-startTime)/1000.0 <= this.cutoff){
+		//while((System.currentTimeMillis()-startTime)/1000.0 <= this.cutoff){
+//						
+//			if(cnt%20000==0){
+//				System.out.println();
+//				System.out.println("iter " + iter);
+//			}
+			
 			initSetUp(G);
 			int iterCnt = 0;
 			double Temp = 100;
@@ -29,7 +58,12 @@ public class simulatedAnnealing {
 			int f_local = G.numNodes;
 			Set<Integer> sol_local = new HashSet<Integer>(G.unUsedVertex);
 			Set<Integer> sureSet = new HashSet<Integer>(G.unUsedVertex);
-			while(Temp > 0.01 && iterCnt < innerLoopCnt){
+			boolean timeUp = false;
+			double passTime = 0;
+			long iterStartTime = System.currentTimeMillis();
+			
+			//while(Temp > 0.01 && iterCnt < innerLoopCnt){
+			while(passTime <= iterCutOff){
 				
 				//System.out.println("Sup "+ iter +" Iter "+iterCnt + " Temp "+Temp);
 				
@@ -41,27 +75,17 @@ public class simulatedAnnealing {
 				boolean found = false;
 				
 				while(findCnt < 2*G.numNodes && !found){
+				//while(!found){
 					curIdx = gen.nextInt(G.numNodes)+1;
 					found = G.isVC(sol_local, curIdx);
 					//System.out.println(curIdx);
 					findCnt++;
-//					if(searched.contains(curIdx)){
-//						findCnt--;
-//					}
-//					else{
-//						searched.add(curIdx);
-//					}
 				}
 				
 				if(!found){
-					break;
+					passTime = (System.currentTimeMillis() - iterStartTime)/1000.0;
+					continue;
 				}
-//				else if(G.nodes.get(curIdx).used==true){
-//					System.out.println("-");
-//				}
-//				else{
-//					System.out.println("+");
-//				}
 								
 				if(G.nodes.get(curIdx).used==true){
 					G.nodes.get(curIdx).used=false;
@@ -71,8 +95,11 @@ public class simulatedAnnealing {
 						if(f_cur<f_local){
 							f_local = f_cur;
 							sol_local.remove(curIdx);
+							long curTime = System.currentTimeMillis();
 							if(sol_local.size()<sureSet.size() && G.isVC(sol_local)){
 								sureSet = new HashSet<Integer>(sol_local);
+								cnt++;
+								o2.printf("%.2f,%d\n", (curTime-startTime)/1000.0,sol_local.size());
 							}
 						}
 						f_prev = f_cur;
@@ -89,8 +116,11 @@ public class simulatedAnnealing {
 						if(f_cur<f_local){
 							f_local = f_cur;
 							sol_local.add(curIdx);
+							long curTime = System.currentTimeMillis();
 							if(sol_local.size()<sureSet.size() && G.isVC(sol_local)){
 								sureSet = new HashSet<Integer>(sol_local);
+								cnt++;
+								o2.printf("%.2f,%d\n", (curTime-startTime)/1000.0,sol_local.size());
 							}
 						}
 						f_prev = f_cur;
@@ -100,22 +130,35 @@ public class simulatedAnnealing {
 					}
 				}
 				
-				//if(G.numNodes*0.15<iterCnt){
-					Temp *= decreaseRatio;
-				//}
+				Temp *= decreaseRatio;
 				iterCnt++;
+				
+				long curTime = System.currentTimeMillis();
+				passTime = (curTime - iterStartTime)/1000.0;
 			}
 			
+			
+			//System.out.println("iter "+iter+" Time: "+(System.currentTimeMillis()-startTime)/1000.0);
 			
 			//update
 			if(res.size()>=sureSet.size()){
 				res = new HashSet<Integer>(sureSet);
 			}
 			iter++;
+			
+			
 		}
 		
-		double t = (System.currentTimeMillis() - startTime)/1000;
-		System.out.println("Time spent: "+t);
+		double t = (System.currentTimeMillis() - startTime)/1000.0;
+		
+		
+		
+		o1.println(res.size());
+		for(Integer i: res){
+			o1.printf("%d,", i);
+		}
+		this.o1.close();
+		this.o2.close();
 		return res;
 	}
 	

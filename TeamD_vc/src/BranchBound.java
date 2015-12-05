@@ -1,4 +1,7 @@
 import java.util.*;
+import java.io.FileNotFoundException;
+import java.io.PrintWriter;
+import java.io.UnsupportedEncodingException;
 
 public class BranchBound {
 	
@@ -6,19 +9,35 @@ public class BranchBound {
 	Set<Integer> bestVertexSet;
 	boolean VCfound;
 	long startTime;
+	//String out1;
+	String out2;
+	//PrintWriter o1;
+	PrintWriter o2;
+	int cutoff;
+	boolean timeUp;
 	
 	static int iterCnt = 0; 
 	//mostConnectedVertex mCV;
 	
-	public BranchBound(Graph G){
+	public BranchBound(Graph G, int t, PrintWriter outfile2) throws FileNotFoundException, UnsupportedEncodingException{
+		this.startTime = System.currentTimeMillis();
 		Approx init = new Approx();
 		this.bestVertexSet = init.getVC_approx(G);
-		this.lowerBound = G.numNodes;//this.bestVertexSet.size();
+		this.lowerBound = this.bestVertexSet.size();
 		VCfound = true;
-		this.startTime = System.currentTimeMillis();
+		this.o2 = outfile2;
+		timeUp = false;
+		this.o2.printf("%.2f,%d\n", (System.currentTimeMillis()-startTime)/1000.0, this.bestVertexSet.size());
+		this.cutoff = t;
 	}
 	
 	public void getVC_BB(Graph G, int curMostConnected){
+		
+		if(((System.currentTimeMillis()-this.startTime)/1000.0)>=this.cutoff){
+			//System.out.println((System.currentTimeMillis()-this.startTime)/1000.0);
+			timeUp = true;
+			return;
+		}
 		
 		if(curMostConnected == -1 && G.visitedEdgesCnt == 2*G.numEdges){
 			double solTime = (System.currentTimeMillis()-this.startTime)/1000.0;
@@ -26,7 +45,8 @@ public class BranchBound {
 			this.bestVertexSet = new HashSet<Integer>(G.usedVertex);
 			this.lowerBound = this.bestVertexSet.size();
 			this.VCfound = true;
-			System.out.println("New opt found with "+ this.lowerBound+" TimeLapse: "+solTime);
+			//System.out.println("New opt found with "+ this.lowerBound+" TimeLapse: "+solTime);
+			this.o2.printf("%.2f,%d\n",solTime,this.bestVertexSet.size());
 			
 			return;
 		}
@@ -60,6 +80,10 @@ public class BranchBound {
 		}
 		else{
 			getVC_BB(G, nextMostConnected);
+			
+			if(timeUp==true)
+				return;
+			
 			G.usedVertex.remove(curMostConnected);
 			G.unUsedVertex.add(curMostConnected);
 			
@@ -95,6 +119,7 @@ public class BranchBound {
 					currentBestLB2 = G.unCoveredEdge.get(nextMostConnected2).size()>0?G.usedVertex.size() + (G.numEdges-G.visitedEdgesCnt/2+G.unCoveredEdge.get(nextMostConnected2).size()-1)/G.unCoveredEdge.get(nextMostConnected2).size():G.usedVertex.size();
 				
 				if(nextMostConnected2!=-1 && (nextMostConnected2 != nextMostConnected && currentBestLB2 < this.lowerBound)){
+				//if(nextMostConnected2!=-1 && currentBestLB2 < this.lowerBound){
 					getVC_BB(G, nextMostConnected2);
 				}
 				

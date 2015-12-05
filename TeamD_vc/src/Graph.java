@@ -11,7 +11,7 @@ public class Graph {
 	Set<Integer> usedVertex = new HashSet<Integer>();
 	Set<Integer> unUsedVertex = new HashSet<Integer>();
 	
-	Set<Integer> solution = new HashSet<Integer>();
+//	Set<Integer> solution = new HashSet<Integer>();
 	
 	HashMap<Integer, Set<Integer>> edgeMap = new HashMap<Integer, Set<Integer>>();
 	HashMap<Integer, Set<Integer>> unCoveredEdge = new HashMap<Integer, Set<Integer>>();
@@ -34,10 +34,10 @@ public class Graph {
 			this.unUsedVertex.add(i);
 		}
 		
-		int[] s = {41, 30, 56, 11, 80, 28, 53, 55, 45, 104, 74, 47, 101, 10, 12, 68, 52, 109, 88, 71, 17, 29, 54, 77, 110, 93, 39, 7, 16, 81, 9, 40, 27, 31, 91, 57, 100, 44, 70, 108, 8, 66, 94, 59, 38, 25, 5, 3, 113, 42, 19, 48, 99, 75, 22, 24, 78, 64, 46, 26, 34, 32, 63, 95, 73, 111, 90, 87, 18, 35, 115, 4, 84, 82, 13, 72, 14, 2, 21, 114, 15, 20, 60, 1, 69, 79, 65, 36, 107, 49, 58, 6, 50, 67};
-		for(Integer i: s){
-			this.solution.add(i);
-		}
+//		int[] s = {41, 30, 56, 11, 80, 28, 53, 55, 45, 104, 74, 47, 101, 10, 12, 68, 52, 109, 88, 71, 17, 29, 54, 77, 110, 93, 39, 7, 16, 81, 9, 40, 27, 31, 91, 57, 100, 44, 70, 108, 8, 66, 94, 59, 38, 25, 5, 3, 113, 42, 19, 48, 99, 75, 22, 24, 78, 64, 46, 26, 34, 32, 63, 95, 73, 111, 90, 87, 18, 35, 115, 4, 84, 82, 13, 72, 14, 2, 21, 114, 15, 20, 60, 1, 69, 79, 65, 36, 107, 49, 58, 6, 50, 67};
+//		for(Integer i: s){
+//			this.solution.add(i);
+//		}
 		
 	}
 	
