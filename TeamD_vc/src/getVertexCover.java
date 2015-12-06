@@ -74,8 +74,8 @@ public class getVertexCover {
 			VCset = app.getVC_approx(G, true);
 		}
 		else if(algPick.equalsIgnoreCase("fast")){
-			outFileName1 = inFileName+"_Fast_"+allowedTime+".sol";
-			outFileName2 = inFileName+"_Fast_"+allowedTime+".trace";
+			outFileName1 = inFileName+"_Fast_"+allowedTime+"_"+String.valueOf(randSeed)+".sol";
+			outFileName2 = inFileName+"_Fast_"+allowedTime+"_"+String.valueOf(randSeed)+".trace";
 			fastVC fast = new fastVC(randSeed, allowedTime, outFileName1, outFileName2);
 			VCset = fast.getVC_fast(inFileName);
 		}
