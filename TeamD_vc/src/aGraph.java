@@ -1,6 +1,6 @@
 import java.util.*;
 
-public class Graph {
+public class aGraph {
 	int numNodes = 0;
 	int numEdges = 0;
 	HashMap<Integer, Set<Integer>> Nodes = new HashMap<Integer, Set<Integer>>();
@@ -10,11 +10,11 @@ public class Graph {
 		}
 	};
 	
-	public Graph(){
+	public aGraph(){
 		
 	}
 	
-	public Graph(int n, int e){
+	public aGraph(int n, int e){
 		this.numNodes = n;
 		this.numEdges = e;
 		

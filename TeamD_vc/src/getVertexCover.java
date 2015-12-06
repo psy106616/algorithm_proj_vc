@@ -2,7 +2,7 @@ import java.util.*;
 import java.io.*;
 
 public class getVertexCover {
-	static String USAGE = "Usage: java getVertexCover <inputFileName> <method: bb, sa, approx> <cut off time in seconds> [<randSeed>]";
+	static String USAGE = "Usage: java getVertexCover <inputFileName> <method: bb, sa, fast, approx> <cut off time in seconds> [<randSeed>]";
 
 	public static void main(String[] args) throws IOException {
 		
@@ -35,7 +35,7 @@ public class getVertexCover {
 //		int allowedTime = 60;
 		
 				
-		if(!algPick.equalsIgnoreCase("bb") && !algPick.equalsIgnoreCase("sa") && !algPick.equalsIgnoreCase("approx")){
+		if(!algPick.equalsIgnoreCase("bb") && !algPick.equalsIgnoreCase("sa") && !algPick.equalsIgnoreCase("fast") && !algPick.equalsIgnoreCase("approx")){
 			System.out.println("Algorithm not recognized");
 			System.out.println(USAGE);
 			System.exit(1);
@@ -72,6 +72,12 @@ public class getVertexCover {
 			outFileName2 = inFileName+"_Approx_"+allowedTime+".trace";
 			Approx app = new Approx(outFileName1, outFileName2);
 			VCset = app.getVC_approx(G, true);
+		}
+		else if(algPick.equalsIgnoreCase("fast")){
+			outFileName1 = inFileName+"_Fast_"+allowedTime+".sol";
+			outFileName2 = inFileName+"_Fast_"+allowedTime+".trace";
+			fastVC fast = new fastVC(randSeed, allowedTime, outFileName1, outFileName2);
+			VCset = fast.getVC_fast(inFileName);
 		}
 		else{
 			//using simulated annealing
