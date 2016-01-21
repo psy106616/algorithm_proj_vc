@@ -1,6 +1,6 @@
 public class Edge {
-	int end1;
-	int end2;
+	public int end1;
+	public int end2;
 	
 	public Edge(int e1, int e2){
 		this.end1 = e1;

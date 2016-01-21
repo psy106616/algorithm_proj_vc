@@ -1,0 +1,9 @@
+$$F=A\sum\limits_{i=1}^nv_i+B\sum\limits_{i=1}^n\sum\limits_{j=1}^nd_{ij}(v_iv_j-v_i-v_j)+B\sum\limits_i^n\sum\limits_j^nd_{ij}$$
+
+$$
+p_r = \exp{(-\frac{\Delta F(1+Deg(v_i))}{T})}
+$$
+
+$$
+p_a = \exp{(-\frac{\Delta F(1-Deg(v_i))}{T})}
+$$
